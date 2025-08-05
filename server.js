@@ -256,6 +256,36 @@ app.post('/api/videos/drive', authMiddleware, async (req, res) => {
 });
 
 
+//menukis otomatis
+const logFolder = path.join(__dirname, 'tes');
+const logFile = path.join(logFolder, 'log_otomatis.txt');
+
+// Pastikan folder 'tes' ada
+fsExtra.ensureDirSync(logFolder);
+
+// Fungsi untuk menulis otomatis setiap 15 menit
+function tulisOtomatisKeFile() {
+  const waktu = new Date().toLocaleString();
+  const randomHex = Math.random().toString(16).slice(2, 10);
+  const tulisan = `[${waktu}] Log otomatis | random: ${randomHex}\n`;
+
+  console.log('Menulis log otomatis:', tulisan.trim());
+
+  fs.appendFile(logFile, tulisan, (err) => {
+    if (err) {
+      console.error('Gagal menulis log otomatis:', err);
+    }
+  });
+}
+
+// Langsung jalan pertama kali
+tulisOtomatisKeFile();
+
+// Ulangi setiap 15 menit
+setInterval(tulisOtomatisKeFile, 10 * 60 * 1000);
+
+/////
+
 
 const PORT = 7575;
 app.listen(PORT, () => {
